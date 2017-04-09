@@ -12,18 +12,19 @@ module PaczkomatyInpost
 
   class Request
 
-    attr_accessor :username, :password
+    attr_accessor :username, :password, :sandbox
 
 
-    def initialize(username, password)
+    def initialize(username, password, sandbox = nil)
       self.username = username
       self.password = password
+      @sandbox = sandbox
     end
 
     def get_params
       params = {}
 
-      uri = URI.parse("#{PaczkomatyInpost.inpost_api_url}/?do=getparams")
+      uri = URI.parse("#{PaczkomatyInpost.inpost_api_url(sandbox)}/?do=getparams")
       begin
         response = Net::HTTP.get_response(uri)
       rescue SystemCallError
@@ -333,7 +334,7 @@ module PaczkomatyInpost
 
     def get_response(params)
       params = URI.escape(params)
-      uri = URI.parse("#{PaczkomatyInpost.inpost_api_url}#{params}")
+      uri = URI.parse("#{PaczkomatyInpost.inpost_api_url(sandbox)}#{params}")
       begin
         response = Net::HTTP.get_response(uri)
       rescue SystemCallError
@@ -344,7 +345,7 @@ module PaczkomatyInpost
     end
 
     def get_https_response(params,path)
-      https = Net::HTTP.new(PaczkomatyInpost.inpost_api_url.gsub('http://',''), 443)
+      https = Net::HTTP.new(PaczkomatyInpost.inpost_api_url(sandbox).gsub('http://',''), 443)
       https.use_ssl = true
       https.verify_mode = OpenSSL::SSL::VERIFY_NONE
       headers = {'Content-Type'=> 'application/x-www-form-urlencoded'}
