@@ -10,9 +10,9 @@ module PaczkomatyInpost
     attr_accessor :request, :data_adapter, :params
 
 
-    def initialize(username, password, data_adapter)
+    def initialize(username, password, data_adapter, sandbox = nil)
       self.data_adapter = data_adapter
-      self.request = PaczkomatyInpost::Request.new(username, password)
+      self.request = PaczkomatyInpost::Request.new(username, password, sandbox)
       inpost_check_environment
       inpost_get_params
     end
